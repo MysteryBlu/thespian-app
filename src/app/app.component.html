@@ -1,11 +1,22 @@
 <div class="container">
-  <video id="video" controls class="video">
-    <source src="assets/video_1/clip.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-  <div id="subtitles-container" class="subtitles-container">
-    <div *ngIf="currentSubtitles" id="subtitles" class="subtitles">
-      {{ currentSubtitles }}
+  <div class="video-container">
+    <video id="video" controls class="video">
+      <source src="assets/video_1/clip.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div id="subtitles-container" class="subtitles-container">
+      <div *ngIf="currentSubtitles" id="subtitles" class="subtitles">
+        {{ currentSubtitles }}
+      </div>
     </div>
+  </div>
+  <div class="transcript-container">
+    <ul class="transcript-list">
+      <li *ngFor="let subtitle of subtitles; let i = index" 
+          (click)="seekToSubtitle(subtitle)"
+          class="transcript-item">
+        {{ subtitle.start | secondsToTime }} - {{ subtitle.text }}
+      </li>
+    </ul>
   </div>
 </div>

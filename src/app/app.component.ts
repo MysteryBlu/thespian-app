@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { SecondsToTime } from '../shared/pipes/seconds-to-time.pipe';
 
 interface Subtitle {
   start: number;
@@ -11,14 +12,14 @@ interface Subtitle {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule],
+  imports: [RouterOutlet, CommonModule, SecondsToTime],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
   currentSubtitles = '';
+  subtitles: Subtitle[] = [];
 
-  private subtitles: Subtitle[] = [];
   private videoElement!: HTMLVideoElement;
 
   constructor(private http: HttpClient) { }
@@ -79,13 +80,29 @@ export class AppComponent {
   updateSubtitles(): void {
     const currentTime = this.videoElement.currentTime;
 
-    for (const subtitle of this.subtitles) {
-      if (currentTime >= subtitle.start && currentTime <= subtitle.end) {
-        this.currentSubtitles = subtitle.text;
-        break;
-      } else {
-        this.currentSubtitles = '';
-      }
+    const index = this.subtitles.findIndex(s => currentTime >= s.start && currentTime <= s.end);
+
+    if (index >= 0) {
+      this.currentSubtitles = this.subtitles[index].text;
+    } else {
+      this.currentSubtitles = '';
     }
+
+    this.highlightActiveSubtitle(index);
+  }
+
+  highlightActiveSubtitle(index: number): void {
+    const transcriptElements = document.getElementsByClassName('transcript-item');
+    for (let i = 0; i < transcriptElements.length; i++) {
+      transcriptElements[i].classList.remove('active');
+    }
+    if (index !== -1 && transcriptElements[index]) {
+      transcriptElements[index].classList.add('active');
+      transcriptElements[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  seekToSubtitle(subtitle: Subtitle): void {
+    this.videoElement.currentTime = subtitle.start;
   }
 }
