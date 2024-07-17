@@ -1,0 +1,16 @@
+{
+  "folders": [
+    {
+      "displayName": "Supersuit",
+      "name": "video_1",
+      "video": "clip.mp4",
+      "captions": "captions.srt"
+    },
+    {
+      "displayName": "Vacuum",
+      "name": "video_2",
+      "video": "clip.mp4",
+      "captions": "captions.srt"
+    }
+  ]
+}

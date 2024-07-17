@@ -1,13 +1,18 @@
 <div class="container">
   <div class="video-container">
-    <video id="video" controls class="video">
-      <source src="assets/video_1/clip.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-    <div id="subtitles-container" class="subtitles-container">
-      <div *ngIf="currentSubtitles" id="subtitles" class="subtitles">
-        {{ currentSubtitles }}
+    <div class="video-player-container">
+      <video id="video" controls class="video-player" [src]="videoSrc" type="video/mp4" autoplay>
+      </video>
+      <div class="subtitles-container">
+        <div [hidden]="!currentSubtitles" id="subtitles" class="subtitles">
+          {{ currentSubtitles }}
+        </div>
       </div>
+    </div>
+    <div class="video-buttons-container">
+      <button class="video-button" *ngFor="let video of folders" (click)="loadVideo(video.name)">
+        {{ video.displayName }}
+      </button>
     </div>
   </div>
   <div class="transcript-container">
@@ -18,5 +23,19 @@
         {{ subtitle.start | secondsToTime }} - {{ subtitle.text }}
       </li>
     </ul>
+  </div>
+  <div class="actions">
+    <div>
+      <label for="font-size" class="actions-text">Subtitle Font Size:</label>
+      <select id="font-size" [(ngModel)]="currentFontSize" (change)="changeSubtitleFontSize($event)">
+        <option *ngFor="let size of fontSizes" [value]="size">{{ size }}</option>
+      </select>
+    </div>
+    <div>
+      <label for="font-color" class="actions-text">Subtitle Font Color:</label>
+      <select id="font-color" [(ngModel)]="currentFontColor" (change)="changeSubtitleFontColor($event)">
+        <option *ngFor="let color of fontColors" [value]="color">{{ color }}</option>
+      </select>
+    </div>
   </div>
 </div>
